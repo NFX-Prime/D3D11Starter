@@ -17,6 +17,9 @@ public:
 	void Draw(float deltaTime, float totalTime);
 	void OnResize();
 
+	// Helper functions
+	void ImGuiUpd(float deltaTime, float totalTime);
+
 private:
 
 	// Initialization helper methods - feel free to customize, combine, remove, etc.
