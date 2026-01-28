@@ -16,11 +16,11 @@
 
 // For the DirectX Math library
 using namespace DirectX;
-
 // --------------------------------------------------------
 // The constructor is called after the window and graphics API
 // are initialized but before the game loop begins
 // --------------------------------------------------------
+
 Game::Game()
 {
 	// Initialize ImGui itself & platform/renderer backends
@@ -32,7 +32,7 @@ Game::Game()
 	ImGui::StyleColorsDark();
 	//ImGui::StyleColorsLight();
 	//ImGui::StyleColorsClassic();
-
+	
 	// Helper methods for loading shaders, creating some basic
 	// geometry to draw and some simple camera matrices.
 	//  - You'll be expanding and/or replacing these later
@@ -266,8 +266,46 @@ void Game::ImGuiUpd(float deltaTime, float totalTime) {
 	// Determine new input capture
 	Input::SetKeyboardCapture(io.WantCaptureKeyboard);
 	Input::SetMouseCapture(io.WantCaptureMouse);
-	// Show the demo window
-	ImGui::ShowDemoWindow();
+}
+
+
+void Game::BuildUI() {
+
+	static int number = 1;
+	static int sliderNum = 0;
+	static bool showWindow = true;
+	static XMFLOAT4 color(1.0f, 0.0f, 0.5f, 1.0f);
+
+
+	ImGui::Begin("My First Window"); // Everything after is part of the window
+	ImGui::Text("Current Framerate: %f fps", ImGui::GetIO().Framerate);
+	ImGui::Text("Window Resolution: %dx%d", Window::Width(), Window::Height());
+	ImGui::ColorEdit4("RGBA color editor", &color.x);
+	
+	// very basic way to check true/false
+	if (ImGui::Button("HideUI")) {
+		number++;
+		if (number % 2 == 0) {
+			showWindow = false;
+		}
+		else {
+			showWindow = true;
+		}
+
+	}
+
+	ImGui::SliderInt("Slippy Slidey Slider", &sliderNum, 0, 100);
+
+	static bool check = true;
+	ImGui::Checkbox("Kick ass checkbox", &check);
+
+	static char message[128] = "";
+	ImGui::InputTextWithHint("This is a text input", "Type something!", message, IM_ARRAYSIZE(message));
+
+	if (showWindow) {
+		ImGui::ShowDemoWindow();
+	}
+	ImGui::End(); // Ends the current window
 }
 
 
@@ -276,7 +314,9 @@ void Game::ImGuiUpd(float deltaTime, float totalTime) {
 // --------------------------------------------------------
 void Game::Update(float deltaTime, float totalTime)
 {
+	
 	ImGuiUpd(deltaTime, totalTime);
+	BuildUI();
 	// Example input checking: Quit if the escape key is pressed
 	if (Input::KeyDown(VK_ESCAPE))
 		Window::Quit();

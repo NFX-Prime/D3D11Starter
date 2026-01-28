@@ -20,6 +20,11 @@ public:
 	// Helper functions
 	void ImGuiUpd(float deltaTime, float totalTime);
 
+	void BuildUI();
+
+	 
+
+
 private:
 
 	// Initialization helper methods - feel free to customize, combine, remove, etc.
@@ -39,5 +44,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
+
+
 };
 
