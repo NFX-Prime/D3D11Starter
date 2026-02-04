@@ -161,7 +161,7 @@ void Game::CreateGeometry()
 	XMFLOAT4 red = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 	XMFLOAT4 green = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
 	XMFLOAT4 blue = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
-	XMFLOAT4 randomColor = XMFLOAT4(0.5f, 0.0f, 0.6f, 0.7f);
+	XMFLOAT4 randomColor = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 	XMFLOAT4 randomColorTwo = XMFLOAT4(0.8f, 0.0f, 0.5f, 0.2f);
 
 	// Set up the vertices of the triangle we would like to draw
@@ -188,8 +188,8 @@ void Game::CreateGeometry()
 
 		{ XMFLOAT3(+0.4f, +0.4f, +0.0f), red },
 		{ XMFLOAT3(+0.4f, -0.4f, +0.0f), blue },
-		{ XMFLOAT3(-0.4f, -0.4f, +0.0f), green },
 		{ XMFLOAT3(-0.4f, +0.4f, +0.0f), randomColor},
+		{ XMFLOAT3(-0.4f, -0.4f, +0.0f), green },
 	};
 
 	Vertex starVertices[] =
@@ -210,11 +210,11 @@ void Game::CreateGeometry()
 	// - But just to see how it's done...
 	unsigned int indices[] = { 0, 1, 2 };
 	unsigned int squareIndices[] = {0, 1, 2, 3};
-	unsigned int starIndices[] = { 0,1,2,3,4 };
+	unsigned int starIndices[] = { 0, 1, 2, 3, 4 };
 
 	triangle = std::make_shared<Mesh>(vertices, 3, indices, 3);
 	square = std::make_shared<Mesh>(squareVertices, 4, squareIndices, 4);
-	//star = std::make_shared<Mesh>(starVertices, 5, starIndices, 5);
+	star = std::make_shared<Mesh>(starVertices, 5, starIndices, 5);
 }
 
 
@@ -326,7 +326,7 @@ void Game::Draw(float deltaTime, float totalTime)
 
 		triangle->Draw();
 		square->Draw();
-		//star->Draw();
+		star->Draw();
 
 	}
 
