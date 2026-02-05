@@ -4,6 +4,7 @@
 #include <wrl/client.h>
 #include <memory>
 #include "Mesh.h"
+#include "DirectXMath.h"
 
 class Game
 {
@@ -29,6 +30,8 @@ public:
 	std::shared_ptr<Mesh> triangle;
 	std::shared_ptr<Mesh> square;
 	std::shared_ptr<Mesh> star;
+
+	DirectX::XMFLOAT4 bgColor;
 
 
 private:

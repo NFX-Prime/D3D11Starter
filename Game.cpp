@@ -34,6 +34,8 @@ Game::Game()
 	ImGui::StyleColorsDark();
 	//ImGui::StyleColorsLight();
 	//ImGui::StyleColorsClassic();
+
+	bgColor = XMFLOAT4(1.0f, 0.0f, 0.5f, 1.0f);
 	
 	// Helper methods for loading shaders, creating some basic
 	// geometry to draw and some simple camera matrices.
@@ -188,8 +190,8 @@ void Game::CreateGeometry()
 
 		{ XMFLOAT3(+0.4f, +0.4f, +0.0f), red },
 		{ XMFLOAT3(+0.4f, -0.4f, +0.0f), blue },
+		{ XMFLOAT3(-0.4f, -0.4f, +0.0f), green }, 
 		{ XMFLOAT3(-0.4f, +0.4f, +0.0f), randomColor},
-		{ XMFLOAT3(-0.4f, -0.4f, +0.0f), green },
 	};
 
 	Vertex starVertices[] =
@@ -209,11 +211,11 @@ void Game::CreateGeometry()
 	//    in the correct order and each one will be used exactly once
 	// - But just to see how it's done...
 	unsigned int indices[] = { 0, 1, 2 };
-	unsigned int squareIndices[] = {0, 1, 2, 3};
+	unsigned int squareIndices[] = {0, 1, 2, 0, 2, 3};
 	unsigned int starIndices[] = { 0, 1, 2, 3, 4 };
 
 	triangle = std::make_shared<Mesh>(vertices, 3, indices, 3);
-	square = std::make_shared<Mesh>(squareVertices, 4, squareIndices, 4);
+	square = std::make_shared<Mesh>(squareVertices, 4, squareIndices, 6);
 	star = std::make_shared<Mesh>(starVertices, 5, starIndices, 5);
 }
 
@@ -250,13 +252,13 @@ void Game::BuildUI() {
 	static int number = 1;
 	static int sliderNum = 0;
 	static bool showWindow = true;
-	static XMFLOAT4 color(1.0f, 0.0f, 0.5f, 1.0f);
+	
 
 
 	ImGui::Begin("My First Window"); // Everything after is part of the window
 	ImGui::Text("Current Framerate: %f fps", ImGui::GetIO().Framerate);
 	ImGui::Text("Window Resolution: %dx%d", Window::Width(), Window::Height());
-	ImGui::ColorEdit4("RGBA color editor", &color.x);
+	ImGui::ColorEdit4("RGBA color editor", &bgColor.x);
 	
 	// very basic way to check true/false
 	if (ImGui::Button("HideUI")) {
@@ -309,8 +311,8 @@ void Game::Draw(float deltaTime, float totalTime)
 	// - At the beginning of Game::Draw() before drawing *anything*
 	{
 		// Clear the back buffer (erase what's on screen) and depth buffer
-		const float color[4] = { 0.4f, 0.6f, 0.75f, 0.0f };
-		Graphics::Context->ClearRenderTargetView(Graphics::BackBufferRTV.Get(),	color);
+
+		Graphics::Context->ClearRenderTargetView(Graphics::BackBufferRTV.Get(),	&bgColor.x);
 		Graphics::Context->ClearDepthStencilView(Graphics::DepthBufferDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 	}
 
