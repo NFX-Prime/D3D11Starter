@@ -79,6 +79,7 @@ int Mesh::GetIndexCount() {
 int Mesh::GetVertexCount() {
 	return numVertices;
 }
+
 void Mesh::Draw() {
 	// Set buffers in the input assembler (IA) stage
 //  - Do this ONCE PER OBJECT, since each object may have different geometry

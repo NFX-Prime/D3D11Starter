@@ -218,9 +218,9 @@ void Game::CreateGeometry()
 	unsigned int squareIndices[] = {0, 1, 2, 0, 2, 3};
 	unsigned int coolShapeIndices[] = { 0, 1, 2, 0, 2, 3, 4, 0, 3, 2, 1, 5, 0, 6, 1, 3, 2, 7};
 
-	triangle = std::make_shared<Mesh>(vertices, 3, indices, 3);
-	square = std::make_shared<Mesh>(squareVertices, 4, squareIndices, 6);
-	coolShape = std::make_shared<Mesh>(coolShapeVertices, 8, coolShapeIndices, 18);
+	triangle = std::make_shared<Mesh>(vertices, IM_ARRAYSIZE(vertices), indices, IM_ARRAYSIZE(indices));
+	square = std::make_shared<Mesh>(squareVertices, IM_ARRAYSIZE(squareVertices), squareIndices, IM_ARRAYSIZE(squareIndices));
+	coolShape = std::make_shared<Mesh>(coolShapeVertices, IM_ARRAYSIZE(coolShapeVertices), coolShapeIndices, IM_ARRAYSIZE(coolShapeIndices));
 }
 
 
@@ -250,12 +250,23 @@ void Game::ImGuiUpd(float deltaTime, float totalTime) {
 	Input::SetMouseCapture(io.WantCaptureMouse);
 }
 
+void Game::BuildMeshUI(char name[], std::shared_ptr<Mesh> mesh) {
+	if (ImGui::TreeNode(name)) {
+		ImGui::Text("Vertices: %d", mesh->GetVertexCount());
+		ImGui::Text("Indices: %d", mesh->GetIndexCount());
+		ImGui::Text("Triangles: %d", mesh->GetIndexCount() / 3);
+		ImGui::TreePop();
+	}
+}
 
 void Game::BuildUI() {
 
 	static int number = 1;
 	static int sliderNum = 0;
 	static bool showWindow = true;
+	char triName[] = "Triangle";
+	char squareName[] = "Square";
+	char coolShapeName[] = "Cool Shape";
 	
 
 
@@ -275,7 +286,11 @@ void Game::BuildUI() {
 		}
 
 	}
-
+	if (ImGui::CollapsingHeader("Meshes")) {
+		BuildMeshUI(triName, triangle);
+		BuildMeshUI(squareName, square);
+		BuildMeshUI(coolShapeName, coolShape);
+	}
 	ImGui::SliderInt("Slippy Slidey Slider", &sliderNum, 0, 100);
 
 	static bool check = true;

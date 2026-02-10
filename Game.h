@@ -22,8 +22,8 @@ public:
 
 	// Helper functions
 	void ImGuiUpd(float deltaTime, float totalTime);
-
 	void BuildUI();
+	void BuildMeshUI(char name[], std::shared_ptr<Mesh> mesh);
 
 	// commented out to ask during office hours sometime
 	
