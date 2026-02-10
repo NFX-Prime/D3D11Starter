@@ -29,7 +29,7 @@ public:
 	
 	std::shared_ptr<Mesh> triangle;
 	std::shared_ptr<Mesh> square;
-	std::shared_ptr<Mesh> star;
+	std::shared_ptr<Mesh> coolShape;
 
 	DirectX::XMFLOAT4 bgColor;
 
