@@ -38,7 +38,7 @@ Game::Game()
 
 	bgColor = XMFLOAT4(1.0f, 0.0f, 0.5f, 1.0f);
 
-	VertexShaderData vsData;
+	
 	vsData.colorTint = XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f);
 	vsData.offset = XMFLOAT3(0.25f, 0.0f, 0.0f);
 
@@ -294,13 +294,19 @@ void Game::BuildUI() {
 	char triName[] = "Triangle";
 	char squareName[] = "Square";
 	char coolShapeName[] = "Cool Shape";
+	static ImGuiSliderFlags flags = ImGuiSliderFlags_None;
 	
 
 
 	ImGui::Begin("My First Window"); // Everything after is part of the window
 	ImGui::Text("Current Framerate: %f fps", ImGui::GetIO().Framerate);
 	ImGui::Text("Window Resolution: %dx%d", Window::Width(), Window::Height());
-	ImGui::ColorEdit4("RGBA color editor", &bgColor.x);
+	ImGui::ColorEdit4("Background Color Editor", &bgColor.x);
+
+	ImGui::SliderFloat3("Offset Editor", &vsData.offset.x, 0.0f, 1.0f, "%.3f", flags);
+	ImGui::ColorEdit4("Color Tint Editor", &vsData.colorTint.x);
+
+
 	
 	// very basic way to check true/false
 	if (ImGui::Button("HideUI")) {
@@ -373,7 +379,9 @@ void Game::Draw(float deltaTime, float totalTime)
 		//     when drawing different geometry, so it's here as an example
 
 		triangle->Draw();
+
 		square->Draw();
+
 		coolShape->Draw();
 
 	}
