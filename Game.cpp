@@ -207,28 +207,32 @@ void Game::CreateGeometry()
 	//    since we're describing the triangle in terms of the window itself
 	Vertex vertices[] =
 	{
-		{ XMFLOAT3(+0.0f, +0.1f, +0.0f), red },
-		{ XMFLOAT3(+0.1f, -0.1f, +0.0f), blue },
-		{ XMFLOAT3(-0.1f, -0.1f, +0.0f), green },
+		{ XMFLOAT3(-0.5f, +0.7f, +0.0f), red },
+		{ XMFLOAT3(-0.4f, +0.4f, +0.0f), green },
+		{ XMFLOAT3(-0.6f, +0.4f, +0.0f), blue },
+
 	};
 
 	Vertex squareVertices[] =
 	{
+		{ XMFLOAT3(+0.8f, +0.8f, +0.0f), red },
+		{ XMFLOAT3(+0.8f, +0.4f, +0.0f), blue },
+		{ XMFLOAT3(+0.4f, +0.4f, +0.0f), green },
+		{ XMFLOAT3(+0.4f, +0.8f, +0.0f), randomColor},
 
-		{ XMFLOAT3(+0.4f, +0.4f, +0.0f), red },
-		{ XMFLOAT3(+0.4f, -0.4f, +0.0f), blue },
-		{ XMFLOAT3(-0.4f, -0.4f, +0.0f), green }, 
-		{ XMFLOAT3(-0.4f, +0.4f, +0.0f), randomColor},
 	};
 
-	Vertex starVertices[] =
+	Vertex coolShapeVertices[] =
 	{
-	
-		{ XMFLOAT3(+0.0f, +0.5f, +0.0f), red },
-		{ XMFLOAT3(+0.5f, -0.5f, +0.0f), blue },
-		{ XMFLOAT3(-0.5f, -0.5f, +0.0f), green },
-		{ XMFLOAT3(-0.5f, +0.5f, +0.0f), randomColor},
-		{ XMFLOAT3(-0.5f, +0.5f, +0.0f), randomColor},
+
+		{ XMFLOAT3(+0.1f, +0.1f, +0.0f), red }, // top right sqr
+		{ XMFLOAT3(+0.1f, -0.1f, +0.0f), blue }, // bott right sqr
+		{ XMFLOAT3(-0.1f, -0.1f, +0.0f), green },  // bott left sqr
+		{ XMFLOAT3(-0.1f, +0.1f, +0.0f), randomColor}, // top left sqr
+		{ XMFLOAT3(0.0f, +0.3f, +0.0f), red}, // top tri
+		{ XMFLOAT3(0.0f, -0.3f, +0.0f), randomColor}, // bott tri
+		{ XMFLOAT3(+0.2f, +0.0f, +0.0f), green}, // right tri
+		{ XMFLOAT3(-0.2f, +0.0f, +0.0f), green}, // left tri
 	};
 	
 
@@ -239,11 +243,11 @@ void Game::CreateGeometry()
 	// - But just to see how it's done...
 	unsigned int indices[] = { 0, 1, 2 };
 	unsigned int squareIndices[] = {0, 1, 2, 0, 2, 3};
-	unsigned int starIndices[] = { 0, 1, 2, 3, 4 };
+	unsigned int coolShapeIndices[] = { 0, 1, 2, 0, 2, 3, 4, 0, 3, 2, 1, 5, 0, 6, 1, 3, 2, 7};
 
-	triangle = std::make_shared<Mesh>(vertices, 3, indices, 3);
-	square = std::make_shared<Mesh>(squareVertices, 4, squareIndices, 6);
-	star = std::make_shared<Mesh>(starVertices, 5, starIndices, 5);
+	triangle = std::make_shared<Mesh>(vertices, IM_ARRAYSIZE(vertices), indices, IM_ARRAYSIZE(indices));
+	square = std::make_shared<Mesh>(squareVertices, IM_ARRAYSIZE(squareVertices), squareIndices, IM_ARRAYSIZE(squareIndices));
+	coolShape = std::make_shared<Mesh>(coolShapeVertices, IM_ARRAYSIZE(coolShapeVertices), coolShapeIndices, IM_ARRAYSIZE(coolShapeIndices));
 }
 
 
@@ -273,12 +277,23 @@ void Game::ImGuiUpd(float deltaTime, float totalTime) {
 	Input::SetMouseCapture(io.WantCaptureMouse);
 }
 
+void Game::BuildMeshUI(char name[], std::shared_ptr<Mesh> mesh) {
+	if (ImGui::TreeNode(name)) {
+		ImGui::Text("Vertices: %d", mesh->GetVertexCount());
+		ImGui::Text("Indices: %d", mesh->GetIndexCount());
+		ImGui::Text("Triangles: %d", mesh->GetIndexCount() / 3);
+		ImGui::TreePop();
+	}
+}
 
 void Game::BuildUI() {
 
 	static int number = 1;
 	static int sliderNum = 0;
 	static bool showWindow = true;
+	char triName[] = "Triangle";
+	char squareName[] = "Square";
+	char coolShapeName[] = "Cool Shape";
 	
 
 
@@ -298,7 +313,11 @@ void Game::BuildUI() {
 		}
 
 	}
-
+	if (ImGui::CollapsingHeader("Meshes")) {
+		BuildMeshUI(triName, triangle);
+		BuildMeshUI(squareName, square);
+		BuildMeshUI(coolShapeName, coolShape);
+	}
 	ImGui::SliderInt("Slippy Slidey Slider", &sliderNum, 0, 100);
 
 	static bool check = true;
@@ -355,7 +374,7 @@ void Game::Draw(float deltaTime, float totalTime)
 
 		triangle->Draw();
 		square->Draw();
-		star->Draw();
+		coolShape->Draw();
 
 	}
 

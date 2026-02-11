@@ -22,14 +22,14 @@ public:
 
 	// Helper functions
 	void ImGuiUpd(float deltaTime, float totalTime);
-
 	void BuildUI();
+	void BuildMeshUI(char name[], std::shared_ptr<Mesh> mesh);
 
 	// commented out to ask during office hours sometime
 	
 	std::shared_ptr<Mesh> triangle;
 	std::shared_ptr<Mesh> square;
-	std::shared_ptr<Mesh> star;
+	std::shared_ptr<Mesh> coolShape;
 
 	DirectX::XMFLOAT4 bgColor;
 
