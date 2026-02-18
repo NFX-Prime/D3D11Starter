@@ -40,7 +40,7 @@ Game::Game()
 
 	
 	vsData.colorTint = XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f);
-	vsData.offset = XMFLOAT3(0.25f, 0.0f, 0.0f);
+	vsData.world = XMFLOAT4X4(0.25f, 0.0f, 0.0f, 0.0f, 0.25f, 0.0f, 0.0f, 0.0f, 0.25f, 0.0f, 0.0f, 0.0f, 0.25f, 0.0f, 0.0f, 0.0);
 
 	unsigned int size = sizeof(vsData);
 	size = (size + 15) / 16 * 16;
@@ -295,9 +295,6 @@ void Game::BuildUI() {
 	ImGui::Text("Current Framerate: %f fps", ImGui::GetIO().Framerate);
 	ImGui::Text("Window Resolution: %dx%d", Window::Width(), Window::Height());
 	ImGui::ColorEdit4("Background Color Editor", &bgColor.x);
-
-	ImGui::SliderFloat3("Offset Editor", &vsData.offset.x, 0.0f, 1.0f, "%.3f", flags);
-	ImGui::ColorEdit4("Color Tint Editor", &vsData.colorTint.x);
 
 
 	
