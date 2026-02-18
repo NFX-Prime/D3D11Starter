@@ -7,8 +7,17 @@ Transform::Transform() {
 	rotation = DirectX::XMFLOAT3(1, 1, 1);
 	scale = DirectX::XMFLOAT3(1, 1, 1);
 
-	DirectX::XMStoreFloat4x4(&world, DirectX::XMMatrixIdentity());
-	DirectX::XMStoreFloat4x4(&worldInverseTranspose, DirectX::XMMatrixIdentity());
+
+
+	translationMatrix = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
+	rotationMatrix = DirectX::XMMatrixTranslation(rotation.x, rotation.y, rotation.z);
+	scaleMatrix = DirectX::XMMatrixTranslation(scale.x, scale.y, scale.z);
+
+	DirectX::XMMATRIX world = translationMatrix * rotationMatrix * scaleMatrix;
+
+	DirectX::XMStoreFloat4x4(&worldMatrix, world);
+	DirectX::XMStoreFloat4x4(&worldInverseTranspose,DirectX::XMMatrixInverse(0, DirectX::XMMatrixTranspose(world)));
+
 }
 Transform::~Transform() {
 
@@ -48,7 +57,7 @@ DirectX::XMFLOAT3 Transform::GetScale() {
 	return scale;
 }
 DirectX::XMFLOAT4X4 Transform::GetWorldMatrix() {
-	return world;
+	return worldMatrix;
 }
 DirectX::XMFLOAT4X4 Transform::GetWorldInverseTransposeMatrix() {
 	return worldInverseTranspose;

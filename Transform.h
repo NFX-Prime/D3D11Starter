@@ -8,7 +8,11 @@ public:
 	DirectX::XMFLOAT3 rotation;
 	DirectX::XMFLOAT3 scale;
 
-	DirectX::XMFLOAT4X4 world;
+	DirectX::XMMATRIX translationMatrix;
+	DirectX::XMMATRIX scaleMatrix;
+	DirectX::XMMATRIX rotationMatrix;
+
+	DirectX::XMFLOAT4X4 worldMatrix;
 	DirectX::XMFLOAT4X4 worldInverseTranspose;
 
 	// Constructor
