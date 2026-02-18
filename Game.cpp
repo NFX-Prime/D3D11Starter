@@ -75,13 +75,6 @@ Game::Game()
 		// have the same layout, so we can just set this once at startup.
 		Graphics::Context->IASetInputLayout(inputLayout.Get());
 
-		// Set the active vertex and pixel shaders
-		//  - Once you start applying different shaders to different objects,
-		//    these calls will need to happen multiple times per frame
-		D3D11_MAPPED_SUBRESOURCE mappedBuffer = {};
-		Graphics::Context->Map(constBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer);
-		memcpy(mappedBuffer.pData, &vsData, sizeof(vsData));
-		Graphics::Context->Unmap(constBuffer.Get(), 0);
 
 		Graphics::Context->VSSetConstantBuffers(
 			0, // Which slot (register) to bind the buffer to?
@@ -366,6 +359,13 @@ void Game::Draw(float deltaTime, float totalTime)
 
 		Graphics::Context->ClearRenderTargetView(Graphics::BackBufferRTV.Get(),	&bgColor.x);
 		Graphics::Context->ClearDepthStencilView(Graphics::DepthBufferDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+		// Set the active vertex and pixel shaders
+	//  - Once you start applying different shaders to different objects,
+	//    these calls will need to happen multiple times per frame
+		D3D11_MAPPED_SUBRESOURCE mappedBuffer = {};
+		Graphics::Context->Map(constBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer);
+		memcpy(mappedBuffer.pData, &vsData, sizeof(vsData));
+		Graphics::Context->Unmap(constBuffer.Get(), 0);
 	}
 
 	// DRAW geometry
