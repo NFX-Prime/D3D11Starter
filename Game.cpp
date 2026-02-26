@@ -9,6 +9,10 @@
 #include "ImGui/imgui_impl_win32.h"
 #include "Mesh.h"
 #include "BufferStructs.h"
+#include "Transform.h"
+#include "Entity.h"
+#include <vector>
+
 
 #include <DirectXMath.h>
 
@@ -241,6 +245,24 @@ void Game::CreateGeometry()
 	triangle = std::make_shared<Mesh>(vertices, IM_ARRAYSIZE(vertices), indices, IM_ARRAYSIZE(indices));
 	square = std::make_shared<Mesh>(squareVertices, IM_ARRAYSIZE(squareVertices), squareIndices, IM_ARRAYSIZE(squareIndices));
 	coolShape = std::make_shared<Mesh>(coolShapeVertices, IM_ARRAYSIZE(coolShapeVertices), coolShapeIndices, IM_ARRAYSIZE(coolShapeIndices));
+
+	transformOne = std::make_shared<Transform>();
+	transformTwo = std::make_shared<Transform>();
+	transformThree = std::make_shared<Transform>();
+	transformFour = std::make_shared<Transform>();
+	transformFive = std::make_shared<Transform>();
+
+	entityOne = std::make_shared<Entity>(triangle, transformOne);
+	entityTwo = std::make_shared<Entity>(triangle, transformTwo);
+	entityThree = std::make_shared<Entity>(coolShape, transformThree);
+	entityFour = std::make_shared<Entity>(coolShape, transformFour);
+	entityFive = std::make_shared<Entity>(square, transformFive);
+
+	entities.push_back(entityOne);
+	entities.push_back(entityTwo);
+	entities.push_back(entityThree);
+	entities.push_back(entityFour);
+	entities.push_back(entityFive);
 }
 
 
@@ -359,10 +381,9 @@ void Game::Draw(float deltaTime, float totalTime)
 		// Set the active vertex and pixel shaders
 	//  - Once you start applying different shaders to different objects,
 	//    these calls will need to happen multiple times per frame
-		D3D11_MAPPED_SUBRESOURCE mappedBuffer = {};
-		Graphics::Context->Map(constBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer);
-		memcpy(mappedBuffer.pData, &vsData, sizeof(vsData));
-		Graphics::Context->Unmap(constBuffer.Get(), 0);
+
+
+
 	}
 
 	// DRAW geometry
@@ -374,13 +395,15 @@ void Game::Draw(float deltaTime, float totalTime)
 		//  - For this demo, this step *could* simply be done once during Init()
 		//  - However, this needs to be done between EACH DrawIndexed() call
 		//     when drawing different geometry, so it's here as an example
+		for (int i = 0; i < entities.size(); i++) {
+			D3D11_MAPPED_SUBRESOURCE mappedBuffer = {};
+			vsData.world = entities[i]->transform->GetWorldMatrix();
+			Graphics::Context->Map(constBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer);
+			memcpy(mappedBuffer.pData, &vsData, sizeof(vsData));
+			Graphics::Context->Unmap(constBuffer.Get(), 0);
+			entities[i]->Draw();
 
-		triangle->Draw();
-
-		square->Draw();
-
-		coolShape->Draw();
-
+		}
 	}
 
 	// Frame END

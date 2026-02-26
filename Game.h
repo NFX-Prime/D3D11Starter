@@ -1,11 +1,10 @@
 #pragma once
-
-#include <d3d11.h>
-#include <wrl/client.h>
 #include <memory>
 #include "Mesh.h"
 #include "DirectXMath.h"
 #include "BufferStructs.h"
+#include "Entity.h"
+#include <vector>
 
 class Game
 {
@@ -32,7 +31,21 @@ public:
 	std::shared_ptr<Mesh> square;
 	std::shared_ptr<Mesh> coolShape;
 
+	std::shared_ptr<Entity> entityOne;
+	std::shared_ptr<Entity> entityTwo;
+	std::shared_ptr<Entity> entityThree;
+	std::shared_ptr<Entity> entityFour;
+	std::shared_ptr<Entity> entityFive;
+
+	std::shared_ptr<Transform> transformOne;
+	std::shared_ptr<Transform> transformTwo;
+	std::shared_ptr<Transform> transformThree;
+	std::shared_ptr<Transform> transformFour;
+	std::shared_ptr<Transform> transformFive;
+
 	DirectX::XMFLOAT4 bgColor;
+
+	std::vector<std::shared_ptr<Entity>> entities;
 
 
 private:

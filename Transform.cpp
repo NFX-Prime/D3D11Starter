@@ -10,10 +10,10 @@ Transform::Transform() {
 
 
 	translationMatrix = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
-	rotationMatrix = DirectX::XMMatrixTranslation(rotation.x, rotation.y, rotation.z);
-	scaleMatrix = DirectX::XMMatrixTranslation(scale.x, scale.y, scale.z);
+	rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(rotation.y, rotation.x, rotation.z);
+	scaleMatrix = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
 
-	DirectX::XMMATRIX world = translationMatrix * rotationMatrix * scaleMatrix;
+	DirectX::XMMATRIX world = scaleMatrix * rotationMatrix * translationMatrix;
 
 	DirectX::XMStoreFloat4x4(&worldMatrix, world);
 	DirectX::XMStoreFloat4x4(&worldInverseTranspose,DirectX::XMMatrixInverse(0, DirectX::XMMatrixTranspose(world)));
@@ -40,6 +40,7 @@ void Transform::SetRotation(DirectX::XMFLOAT3 rotation) {
 void Transform::SetScale(float x, float y, float z) {
 	scale = DirectX::XMFLOAT3(x, y, z);
 }
+
 void Transform::SetScale(DirectX::XMFLOAT3 scale) {
 	this->scale = scale;
 }
@@ -49,16 +50,20 @@ void Transform::SetScale(DirectX::XMFLOAT3 scale) {
 DirectX::XMFLOAT3 Transform::GetPosition() {
 	return position;
 }
+
 DirectX::XMFLOAT3 Transform::GetPitchYawRoll() {
 	// XMFLOAT4 GetRotation() for quaternion
 	return rotation;
 }
+
 DirectX::XMFLOAT3 Transform::GetScale() {
 	return scale;
 }
+
 DirectX::XMFLOAT4X4 Transform::GetWorldMatrix() {
 	return worldMatrix;
 }
+
 DirectX::XMFLOAT4X4 Transform::GetWorldInverseTransposeMatrix() {
 	return worldInverseTranspose;
 }
@@ -67,18 +72,23 @@ DirectX::XMFLOAT4X4 Transform::GetWorldInverseTransposeMatrix() {
 void Transform::MoveAbsolute(float x, float y, float z){
 	position = DirectX::XMFLOAT3(position.x + x, position.y + y, position.z + z);
 }
+
 void Transform::MoveAbsolute(DirectX::XMFLOAT3 offset) {
 	position = DirectX::XMFLOAT3(position.x + offset.x, position.y + offset.y, position.z + offset.z);
 }
+
 void Transform::Rotate(float pitch, float yaw, float roll) {
 	rotation = DirectX::XMFLOAT3(rotation.x + pitch, rotation.y + yaw, rotation.z + roll);
 }
+
 void Transform::Rotate(DirectX::XMFLOAT3 rotation) {
 	this->rotation = DirectX::XMFLOAT3(this->rotation.x + rotation.x, this->rotation.y + rotation.y, this->rotation.z + rotation.z);
 }
+
 void Transform::Scale(float x, float y, float z) {
 	scale = DirectX::XMFLOAT3(scale.x + x, scale.y + y, scale.z + z);
 }
+
 void Transform::Scale(DirectX::XMFLOAT3 scale) {
 	this->scale = DirectX::XMFLOAT3(this->scale.x + scale.x, this->scale.y + scale.y, this->scale.z + scale.z);
 }
