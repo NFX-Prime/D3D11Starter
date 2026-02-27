@@ -381,8 +381,13 @@ void Game::Draw(float deltaTime, float totalTime)
 		// Set the active vertex and pixel shaders
 	//  - Once you start applying different shaders to different objects,
 	//    these calls will need to happen multiple times per frame
-
-
+		D3D11_MAPPED_SUBRESOURCE mappedBuffer = {};
+		for (int i = 0; i < entities.size(); i++) {
+			vsData.world = entities[i]->GetTransform()->GetWorldMatrix();
+			Graphics::Context->Map(constBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer);
+			memcpy(mappedBuffer.pData, &vsData, sizeof(vsData));
+			Graphics::Context->Unmap(constBuffer.Get(), 0);
+		}
 
 	}
 
@@ -395,14 +400,10 @@ void Game::Draw(float deltaTime, float totalTime)
 		//  - For this demo, this step *could* simply be done once during Init()
 		//  - However, this needs to be done between EACH DrawIndexed() call
 		//     when drawing different geometry, so it's here as an example
-		for (int i = 0; i < entities.size(); i++) {
-			D3D11_MAPPED_SUBRESOURCE mappedBuffer = {};
-			vsData.world = entities[i]->transform->GetWorldMatrix();
-			Graphics::Context->Map(constBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer);
-			memcpy(mappedBuffer.pData, &vsData, sizeof(vsData));
-			Graphics::Context->Unmap(constBuffer.Get(), 0);
-			entities[i]->Draw();
 
+		for (int i = 0; i < entities.size(); i++) {
+			entities[i]->GetTransform()->SetPosition(0, 0, 0);
+			entities[i]->Draw();
 		}
 	}
 
