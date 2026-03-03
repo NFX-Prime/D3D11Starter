@@ -41,4 +41,7 @@ public:
 	void Rotate(DirectX::XMFLOAT3 rotation);
 	void Scale(float x, float y, float z);
 	void Scale(DirectX::XMFLOAT3 scale);
+
+private:
+	void UpdateWorldMatrix();
 };

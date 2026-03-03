@@ -263,6 +263,9 @@ void Game::CreateGeometry()
 	entities.push_back(entityThree);
 	entities.push_back(entityFour);
 	entities.push_back(entityFive);
+
+	entityTwo->GetTransform()->SetPosition(0.5, 0, 0);
+
 }
 
 
@@ -387,6 +390,7 @@ void Game::Draw(float deltaTime, float totalTime)
 			Graphics::Context->Map(constBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer);
 			memcpy(mappedBuffer.pData, &vsData, sizeof(vsData));
 			Graphics::Context->Unmap(constBuffer.Get(), 0);
+			entities[i]->Draw();
 		}
 
 	}
@@ -401,10 +405,6 @@ void Game::Draw(float deltaTime, float totalTime)
 		//  - However, this needs to be done between EACH DrawIndexed() call
 		//     when drawing different geometry, so it's here as an example
 
-		for (int i = 0; i < entities.size(); i++) {
-			entities[i]->GetTransform()->SetPosition(0, 0, 0);
-			entities[i]->Draw();
-		}
 	}
 
 	// Frame END
