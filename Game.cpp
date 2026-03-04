@@ -295,13 +295,36 @@ void Game::ImGuiUpd(float deltaTime, float totalTime) {
 	Input::SetMouseCapture(io.WantCaptureMouse);
 }
 
-void Game::BuildMeshUI(char name[], std::shared_ptr<Mesh> mesh) {
+void Game::BuildMeshUI(char name[], std::shared_ptr<Entity> entity, int id) {
+	static ImGuiSliderFlags flags = ImGuiSliderFlags_None;
+	float xValPos = entity->GetTransform()->GetPosition().x;
+	float yValPos = entity->GetTransform()->GetPosition().y;
+	float zValPos = entity->GetTransform()->GetPosition().z;
+
+	float xValRot = entity->GetTransform()->GetPitchYawRoll().x;
+	float yValRot = entity->GetTransform()->GetPitchYawRoll().y;
+	float zValRot = entity->GetTransform()->GetPitchYawRoll().z;
+
+	float xValScale = entity->GetTransform()->GetScale().x;
+	float yValScale = entity->GetTransform()->GetScale().y;
+	float zValScale = entity->GetTransform()->GetScale().z;
+
+	float posVals[] = { xValPos, yValPos, zValPos};
+	float rotVals[] = { xValRot, yValRot, zValRot };
+	float scaleVals[] = { xValScale, yValScale, zValScale };
+	ImGui::PushID(id);
 	if (ImGui::TreeNode(name)) {
-		ImGui::Text("Vertices: %d", mesh->GetVertexCount());
-		ImGui::Text("Indices: %d", mesh->GetIndexCount());
-		ImGui::Text("Triangles: %d", mesh->GetIndexCount() / 3);
+		ImGui::DragFloat3("Position", posVals, 0.0f, 0.0f, 0.0f);
+		ImGui::DragFloat3("Rotation", rotVals, 0.0f, 0.0f, 0.0f);
+		ImGui::DragFloat3("Scale", scaleVals, 1.0f, 1.0f, 1.0f);
+		ImGui::Text("Mesh Index Count: %d", entity->GetMesh()->GetIndexCount());
+		entity->GetTransform()->SetPosition(posVals[0], posVals[1], posVals[2]);
+		entity->GetTransform()->SetRotation(rotVals[0], rotVals[1], rotVals[2]);
+		entity->GetTransform()->SetScale(scaleVals[0], scaleVals[1], scaleVals[2]);
 		ImGui::TreePop();
 	}
+	ImGui::PopID();
+
 }
 
 void Game::BuildUI() {
@@ -334,15 +357,19 @@ void Game::BuildUI() {
 		}
 
 	}
-	if (ImGui::CollapsingHeader("Meshes")) {
-		BuildMeshUI(triName, triangle);
-		BuildMeshUI(squareName, square);
-		BuildMeshUI(coolShapeName, coolShape);
+	if (ImGui::CollapsingHeader("Scene Entities")) {
+		for (int i = 0; i < entities.size(); i++) {
+			if (entities[i]->GetMesh() == triangle) {
+				BuildMeshUI(triName, entities[i], i);
+			}
+			if (entities[i]->GetMesh() == square) {
+				BuildMeshUI(squareName, entities[i], i);
+			}
+			if (entities[i]->GetMesh() == coolShape) {
+				BuildMeshUI(coolShapeName, entities[i], i);
+			}
+		}
 	}
-	ImGui::SliderInt("Slippy Slidey Slider", &sliderNum, 0, 100);
-
-	static bool check = true;
-	ImGui::Checkbox("Kick ass checkbox", &check);
 
 	static char message[128] = "";
 	ImGui::InputTextWithHint("This is a text input", "Type something!", message, IM_ARRAYSIZE(message));
@@ -391,6 +418,15 @@ void Game::Draw(float deltaTime, float totalTime)
 			memcpy(mappedBuffer.pData, &vsData, sizeof(vsData));
 			Graphics::Context->Unmap(constBuffer.Get(), 0);
 			entities[i]->Draw();
+		}
+
+		for (int i = 0; i < entities.size(); i++) {
+			if (i % 2 == 0) {
+				entities[i]->GetTransform()->MoveAbsolute(0.0001, 0.0001, 0);
+			}
+			else {
+				entities[i]->GetTransform()->Rotate(0, 0, 0.0001);
+			}
 		}
 
 	}
