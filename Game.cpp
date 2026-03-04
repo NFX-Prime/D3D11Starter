@@ -318,9 +318,11 @@ void Game::BuildMeshUI(char name[], std::shared_ptr<Entity> entity, int id) {
 		ImGui::DragFloat3("Rotation", rotVals, 0.0f, 0.0f, 0.0f);
 		ImGui::DragFloat3("Scale", scaleVals, 1.0f, 1.0f, 1.0f);
 		ImGui::Text("Mesh Index Count: %d", entity->GetMesh()->GetIndexCount());
+
 		entity->GetTransform()->SetPosition(posVals[0], posVals[1], posVals[2]);
 		entity->GetTransform()->SetRotation(rotVals[0], rotVals[1], rotVals[2]);
 		entity->GetTransform()->SetScale(scaleVals[0], scaleVals[1], scaleVals[2]);
+
 		ImGui::TreePop();
 	}
 	ImGui::PopID();
