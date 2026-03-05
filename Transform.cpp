@@ -1,6 +1,7 @@
 #include "Transform.h"
 #include "DirectXMath.h"
 
+
 Transform::Transform() {
 
 	position = DirectX::XMFLOAT3(0, 0, 0);
@@ -78,16 +79,23 @@ void Transform::Rotate(DirectX::XMFLOAT3 rotation) {
 }
 
 void Transform::Scale(float x, float y, float z) {
-	scale = DirectX::XMFLOAT3(scale.x + x, scale.y + y, scale.z + z);
+	scale = DirectX::XMFLOAT3(scale.x * x, scale.y * y, scale.z * z);
 }
 
 void Transform::Scale(DirectX::XMFLOAT3 scale) {
-	this->scale = DirectX::XMFLOAT3(this->scale.x + scale.x, this->scale.y + scale.y, this->scale.z + scale.z);
+	this->scale = DirectX::XMFLOAT3(this->scale.x * scale.x, this->scale.y * scale.y, this->scale.z * scale.z);
+}
+void Transform::MoveRelative(float x, float y, float z) {
+	DirectX::XMVECTOR rotationQuaternion = DirectX::XMQuaternionRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+
+}
+void Transform::MoveRelative(DirectX::XMFLOAT3 offset) {
+
 }
 
 void Transform::UpdateWorldMatrix() {
 	translationMatrix = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
-	rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(rotation.y, rotation.x, rotation.z);
+	rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
 	scaleMatrix = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
 
 	DirectX::XMMATRIX world = scaleMatrix * rotationMatrix * translationMatrix;

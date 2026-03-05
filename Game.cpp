@@ -427,7 +427,7 @@ void Game::Draw(float deltaTime, float totalTime)
 				entities[i]->GetTransform()->MoveAbsolute(0.0001, 0.0001, 0);
 			}
 			else {
-				entities[i]->GetTransform()->Rotate(0, 0, 0.0001);
+				entities[i]->GetTransform()->Rotate(0, 0.0001, 0);
 			}
 		}
 
