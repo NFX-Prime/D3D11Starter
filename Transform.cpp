@@ -1,5 +1,6 @@
 #include "Transform.h"
 #include "DirectXMath.h"
+using namespace DirectX;
 
 
 Transform::Transform() {
@@ -86,8 +87,14 @@ void Transform::Scale(DirectX::XMFLOAT3 scale) {
 	this->scale = DirectX::XMFLOAT3(this->scale.x * scale.x, this->scale.y * scale.y, this->scale.z * scale.z);
 }
 void Transform::MoveRelative(float x, float y, float z) {
+	DirectX::XMVECTOR offset = XMVectorSet(x, y, z, 0);
 	DirectX::XMVECTOR rotationQuaternion = DirectX::XMQuaternionRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+	DirectX::XMVECTOR trueDirection = DirectX::XMVector3Rotate(offset, rotationQuaternion);
 
+	DirectX::XMVECTOR posVec = DirectX::XMLoadFloat3(&position);
+	posVec += trueDirection;
+
+	XMStoreFloat3(&position, posVec);
 }
 void Transform::MoveRelative(DirectX::XMFLOAT3 offset) {
 
